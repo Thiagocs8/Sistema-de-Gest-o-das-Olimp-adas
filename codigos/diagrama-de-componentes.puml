@@ -1,0 +1,71 @@
+@startuml diagrama-de-componentes
+
+skinparam componentStyle rectangle
+skinparam linetype ortho
+
+actor "Usuário" as Usuario
+
+component "Navegador Web" as Navegador
+
+component "API Gateway\n<<SERVICE>>" as API {
+  component "</>\nAPI SGO" as APISGO
+}
+
+component "<<SERVICE>>\nCompeticoes" as SvcComp
+component "<<SERVICE>>\nAtletas / Inscricoes" as SvcAtl
+component "<<SERVICE>>\nLocais / Alocacao" as SvcLocal
+component "<<SERVICE>>\nResultados" as SvcRes
+component "<<SERVICE>>\nSeguranca" as SvcSeg
+component "<<SERVICE>>\nRelatorios" as SvcRel
+
+database "S1 AWS\n(Competicoes DB)" as DB1
+database "S2 AWS\n(Atletas DB)" as DB2
+database "S3 AWS\n(Locais DB)" as DB3
+database "S4 AWS\n(Resultados DB)" as DB4
+database "S5 AWS\n(Seguranca DB)" as DB5
+database "S6 AWS\n(Relatorios DB)" as DB6
+
+rectangle "FILAS" {
+  queue "Fila de Inscricoes\n(SQS)" as FilaInsc
+  queue "Fila de Resultados\n(SQS)" as FilaRes
+  queue "Fila de Relatorios\n(SQS)" as FilaRel
+}
+
+component "</>\nWorker Inscricoes" as WrkInsc
+component "</>\nWorker Resultados" as WrkRes
+component "</>\nWorker Relatorios" as WrkRel
+
+Usuario --> Navegador
+Navegador <--> API : HTTPS
+
+API --> SvcComp : REST
+API --> SvcAtl : REST
+API --> SvcLocal : REST
+API --> SvcRes : REST
+API --> SvcSeg : REST
+API --> SvcRel : REST
+
+SvcComp --> DB1 : TCP/IP
+SvcAtl --> DB2 : TCP/IP
+SvcLocal --> DB3 : TCP/IP
+SvcRes --> DB4 : TCP/IP
+SvcSeg --> DB5 : TCP/IP
+SvcRel --> DB6 : TCP/IP
+
+SvcAtl --> FilaInsc : HTTP
+SvcRes --> FilaRes : HTTP
+SvcRel --> FilaRel : HTTP
+
+FilaInsc --> WrkInsc : HTTP
+FilaRes --> WrkRes : HTTP
+FilaRel --> WrkRel : HTTP
+
+WrkInsc --> DB2 : TCP/IP
+WrkRes --> DB4 : TCP/IP
+WrkRel --> DB6 : TCP/IP
+
+SvcRel --> SvcComp : REST
+SvcRel --> SvcAtl : REST
+SvcRel --> SvcRes : REST
+
+@enduml

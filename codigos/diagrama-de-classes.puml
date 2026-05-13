@@ -1,0 +1,130 @@
+@startuml diagrama-de-classes-e-pacotes
+
+skinparam classAttributeIconSize 0
+skinparam packageStyle rectangle
+
+package "model" {
+
+  class Competicao {
+    - id: int
+    - nomeModalidade: String
+    - data: Date
+    - horario: Time
+    + cadastrar(): void
+    + getAtletas(): List<Atleta>
+  }
+
+  class Atleta {
+    - id: int
+    - nome: String
+    + inscrever(c: Competicao): void
+    + getCompeticoes(): List<Competicao>
+  }
+
+  class Local {
+    - id: int
+    - nome: String
+    - capacidade: int
+    + verificarDisponibilidade(data: Date, horario: Time): boolean
+    + alocar(c: Competicao): void
+  }
+
+  class Resultado {
+    - id: int
+    + registrar(): void
+    + getMedalhas(): Map
+  }
+
+  class Pais {
+    - id: int
+    - nome: String
+    - sigla: String
+    - medalhasOuro: int
+    - medalhasPrata: int
+    - medalhasBronze: int
+    + getTotalMedalhas(): int
+  }
+
+  Competicao "0..*" --> "0..*" Atleta : possui inscritos
+  Competicao "1" --> "1" Local : realizada em
+  Atleta "0..*" --> "1" Pais : representa
+  Resultado "1" --> "1" Competicao : referente a
+  Resultado "1" --> "1" Atleta : ouro
+  Resultado "1" --> "1" Atleta : prata
+  Resultado "1" --> "1" Atleta : bronze
+}
+
+package "service" {
+  class CompeticaoService {
+    + cadastrarCompeticao(): void
+    + listarCompeticoes(): List
+  }
+  class AtletaService {
+    + inscreverAtleta(): void
+    + listarAtletas(): List
+  }
+  class LocalService {
+    + alocarLocal(): void
+    + verificarConflito(): boolean
+  }
+  class ResultadoService {
+    + registrarResultado(): void
+  }
+  class RelatorioService {
+    + gerarRelatorioMedalhas(): void
+  }
+}
+
+package "repository" {
+  class CompeticaoRepository {
+    + save(): void
+    + findAll(): List
+    + findById(): Competicao
+  }
+  class AtletaRepository {
+    + save(): void
+    + findAll(): List
+    + findById(): Atleta
+  }
+  class LocalRepository {
+    + save(): void
+    + findAll(): List
+    + findByDisponibilidade(): List
+  }
+  class ResultadoRepository {
+    + save(): void
+    + findByCompeticao(): Resultado
+  }
+  class PaisRepository {
+    + save(): void
+    + findAll(): List
+    + findById(): Pais
+  }
+}
+
+package "controller" {
+  class CompeticaoController {
+    + cadastrar(): Response
+    + listar(): Response
+  }
+  class AtletaController {
+    + inscrever(): Response
+    + listar(): Response
+  }
+  class LocalController {
+    + alocar(): Response
+    + verificarConflito(): Response
+  }
+  class ResultadoController {
+    + registrar(): Response
+  }
+  class RelatorioController {
+    + gerarRelatorio(): Response
+  }
+}
+
+"controller" ..> "service" : usa
+"service" ..> "repository" : usa
+"repository" ..> "model" : persiste
+
+@enduml

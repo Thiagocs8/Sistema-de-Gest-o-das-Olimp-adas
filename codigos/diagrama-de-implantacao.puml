@@ -1,0 +1,105 @@
+@startuml diagrama-de-implantacao
+
+skinparam linetype ortho
+
+node "Dispositivo do Usuario" as Cliente {
+  artifact "Navegador Web" as Browser
+}
+
+node "Servidor Web Front-end" as WebServer {
+  artifact "Aplicacao SGO Front-end" as FrontEnd
+}
+
+node "API Gateway" as GatewayNode {
+  artifact "API SGO" as APIArtifact
+}
+
+node "Servico Competicoes" as NodeComp {
+  artifact "svc-competicoes" as ArtComp
+}
+
+node "Servico Atletas Inscricoes" as NodeAtl {
+  artifact "svc-atletas" as ArtAtl
+}
+
+node "Servico Locais Alocacao" as NodeLocal {
+  artifact "svc-locais" as ArtLocal
+}
+
+node "Servico Resultados" as NodeRes {
+  artifact "svc-resultados" as ArtRes
+}
+
+node "Servico Seguranca" as NodeSeg {
+  artifact "svc-seguranca" as ArtSeg
+}
+
+node "Servico Relatorios" as NodeRel {
+  artifact "svc-relatorios" as ArtRel
+}
+
+node "Filas SQS AWS" as NodeSQS {
+  artifact "Fila Inscricoes" as SQSInsc
+  artifact "Fila Resultados" as SQSRes
+  artifact "Fila Relatorios" as SQSRel
+}
+
+node "Workers" as NodeWorkers {
+  artifact "Worker Inscricoes" as WrkInsc
+  artifact "Worker Resultados" as WrkRes
+  artifact "Worker Relatorios" as WrkRel
+}
+
+node "Banco de Dados AWS S1" as DB1 {
+  artifact "BD Competicoes" as BDComp
+}
+
+node "Banco de Dados AWS S2" as DB2 {
+  artifact "BD Atletas" as BDAtl
+}
+
+node "Banco de Dados AWS S3" as DB3 {
+  artifact "BD Locais" as BDLocal
+}
+
+node "Banco de Dados AWS S4" as DB4 {
+  artifact "BD Resultados" as BDRes
+}
+
+node "Banco de Dados AWS S5" as DB5 {
+  artifact "BD Seguranca" as BDSeg
+}
+
+node "Banco de Dados AWS S6" as DB6 {
+  artifact "BD Relatorios" as BDRel
+}
+
+Cliente --> WebServer : HTTPS
+WebServer --> GatewayNode : HTTPS
+
+GatewayNode --> NodeComp : REST
+GatewayNode --> NodeAtl : REST
+GatewayNode --> NodeLocal : REST
+GatewayNode --> NodeRes : REST
+GatewayNode --> NodeSeg : REST
+GatewayNode --> NodeRel : REST
+
+NodeComp --> DB1 : JDBC/SQL
+NodeAtl --> DB2 : JDBC/SQL
+NodeLocal --> DB3 : JDBC/SQL
+NodeRes --> DB4 : JDBC/SQL
+NodeSeg --> DB5 : JDBC/SQL
+NodeRel --> DB6 : JDBC/SQL
+
+NodeAtl --> NodeSQS : HTTP
+NodeRes --> NodeSQS : HTTP
+NodeSQS --> NodeWorkers : HTTP
+
+NodeWorkers --> DB2 : JDBC/SQL
+NodeWorkers --> DB4 : JDBC/SQL
+
+NodeRel --> NodeComp : REST
+NodeRel --> NodeAtl : REST
+NodeRel --> NodeRes : REST
+
+@enduml
