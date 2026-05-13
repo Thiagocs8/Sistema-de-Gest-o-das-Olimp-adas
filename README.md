@@ -14,8 +14,7 @@ O sistema tem como objetivo coordenar os diferentes aspectos de um evento olímp
 - [Arquitetura](#-arquitetura)
 - [Diagramas UML](#-diagramas-uml)
   - [Diagrama de Caso de Uso](#diagrama-de-caso-de-uso)
-  - [Diagrama de Classes](#diagrama-de-classes)
-  - [Diagrama de Pacotes](#diagrama-de-pacotes)
+  - [Diagrama de Classes e Pacotes](#diagrama-de-classes-e-pacotes)
   - [Diagrama de Componentes](#diagrama-de-componentes)
   - [Diagrama de Implantação](#diagrama-de-implantação)
 - [Estrutura do Repositório](#-estrutura-do-repositório)
@@ -132,19 +131,16 @@ Apresenta os atores (Administrador, Atleta, Juiz) e as principais funcionalidade
 
 ---
 
-### Diagrama de Classes
+### Diagrama de Classes e Pacotes
 
-Estrutura de classes do domínio, com as entidades **Competicao**, **Atleta**, **Local**, **Resultado** e **Pais**, suas associações e multiplicidades. A classe *Resultado* mantém referências separadas para os atletas medalhistas (ouro, prata e bronze).
+Estrutura de classes do domínio organizada em pacotes seguindo o padrão **MVC + Repository**:
 
-<img src="imagens/diagrama-de-classes.png" alt="Diagrama de Classes" width="900"/>
+- **`controller`** — Camada de entrada da API, recebe requisições e delega para os serviços (`CompeticaoController`, `AtletaController`, `LocalController`, `ResultadoController`, `RelatorioController`).
+- **`service`** — Camada de regras de negócio (`CompeticaoService`, `AtletaService`, `LocalService`, `ResultadoService`, `RelatorioService`).
+- **`repository`** — Camada de persistência (`CompeticaoRepository`, `AtletaRepository`, `LocalRepository`, `ResultadoRepository`, `PaisRepository`).
+- **`model`** — Entidades de domínio: **Competicao**, **Atleta**, **Local**, **Resultado** e **Pais**, com suas associações e multiplicidades. A classe *Resultado* mantém referências separadas para os atletas medalhistas (ouro, prata e bronze).
 
----
-
-### Diagrama de Pacotes
-
-Organização interna de cada microsserviço seguindo o padrão **MVC + Repository**: `controller` → `service` → `repository` → `model`. Cada camada tem responsabilidade clara e depende apenas da camada imediatamente inferior.
-
-<img src="imagens/diagrama-de-pacotes.png" alt="Diagrama de Pacotes" width="900"/>
+<img src="imagens/diagrama-de-classes.png" alt="Diagrama de Classes e Pacotes" width="900"/>
 
 ---
 
@@ -182,6 +178,8 @@ sistema-gestao-olimpiadas/
     ├── diagrama-de-componentes.puml
     └── diagrama-de-implantacao.puml
 ```
+
+> **Observação:** os arquivos `diagrama-de-classes.*` e `diagrama-de-pacotes.*` contêm o mesmo diagrama integrado, já que as classes do sistema estão organizadas dentro dos pacotes. Ambos são listados separadamente para atender ao checklist de entregáveis do enunciado.
 
 ---
 
