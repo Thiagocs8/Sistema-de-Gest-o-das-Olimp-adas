@@ -215,4 +215,4 @@ Para usar o servidor público sem instalação:
 
 ## 👤 Autor
 
-Vinicius Oliveira Ramos e Thiago Soares Costa — Trabalho desenvolvido para a disciplina de Projeto de Software.
+Vinicius Oliveira Ramos e Thiago Costa Soares — Trabalho desenvolvido para a disciplina de Projeto de Software.
