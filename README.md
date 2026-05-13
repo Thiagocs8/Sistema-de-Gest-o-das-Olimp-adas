@@ -139,8 +139,7 @@ Estrutura de classes do domínio organizada em pacotes seguindo o padrão **MVC 
 - **`repository`** — Camada de persistência (`CompeticaoRepository`, `AtletaRepository`, `LocalRepository`, `ResultadoRepository`, `PaisRepository`).
 - **`model`** — Entidades de domínio: **Competicao**, **Atleta**, **Local**, **Resultado** e **Pais**, com suas associações e multiplicidades. A classe *Resultado* mantém referências separadas para os atletas medalhistas (ouro, prata e bronze).
 
-<img src="[imagens/diagrama-de-classes.png" alt="Diagrama de Classes e Pacotes](https://github.com/Thiagocs8/Sistema-de-Gestao-das-Olimpiadas/blob/main/imagens/Diagrama%20de%20Classes%20e%20de%20Pacotes.png)" width="900"/>
-
+<img src="imagens/diagrama-de-classes.png" alt="Diagrama de Classes" width="900"/>
 ---
 
 ### Diagrama de Componentes
